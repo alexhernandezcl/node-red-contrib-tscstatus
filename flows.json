@@ -1,0 +1,103 @@
+[
+    {
+        "id": "bf766192f3039b9a",
+        "type": "subflow",
+        "name": "TSC Status",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 20,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "b158377596807f0b"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 820,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "b53d75a3f8041a16",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {
+            "module": "node-red-contrib-tscstatus",
+            "type": "TSCStatus",
+            "version": "0.0.1",
+            "author": "Alex Jara <alexrjarah@gmail.com>",
+            "desc": "A Status from The Super Cloud",
+            "keywords": "node-red,tscstatus",
+            "license": "Apache-2.0"
+        },
+        "color": "#DDAA99"
+    },
+    {
+        "id": "b158377596807f0b",
+        "type": "function",
+        "z": "bf766192f3039b9a",
+        "name": "Prepare Request Status",
+        "func": "msg.start = new Date().valueOf();\nmsg.nodoTime = new Date().toJSON();\nmsg.url = \"https://www.thesuper.cloud/nr/status\";\nmsg.method = \"GET\";\nmsg.payload = \"I say it's \" + msg.nodoTime;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 160,
+        "wires": [
+            [
+                "2e9fe7d7aeac92a9"
+            ]
+        ]
+    },
+    {
+        "id": "2e9fe7d7aeac92a9",
+        "type": "http request",
+        "z": "bf766192f3039b9a",
+        "name": "The Super Cloud",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 450,
+        "y": 160,
+        "wires": [
+            [
+                "b53d75a3f8041a16"
+            ]
+        ]
+    },
+    {
+        "id": "b53d75a3f8041a16",
+        "type": "function",
+        "z": "bf766192f3039b9a",
+        "name": "Format Output",
+        "func": "msg.payload = {\n    iSay: msg.nodoTime,\n    tscSay: msg.payload,\n    spend: (new Date().valueOf() - msg.start) + \"ms\"\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    }
+]
